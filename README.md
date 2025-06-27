@@ -1,7 +1,7 @@
 <h1 align="center">nightshade-poison-testing</h1>
 
 <p align="center">
-  This project is Yero's testing on the effects of Nightshade poisoning in training diffusion models. 
+  This project is Yero's testing on the effectiveness of Nightshade poisoning in training diffusion models. 
 </p>
 
 ## About
@@ -9,11 +9,29 @@ Generative AI is becoming more popular and easier to use as technological capabi
 <br><br>
 >... Nightshade is an offensive tool that artists can use as a group to disrupt models that scrape their images without consent (thus protecting all artists against these models). (Computer Science UChicago., n.d.)
 
-The [Nightshade program tool is freely available](https://nightshade.cs.uchicago.edu/downloads.html) to use by anyone, given with correct supporting platforms (OS and GPU). The paper [<i>Nightshade: Prompt-Specific Poisoning Attacks on Text-to-Image Generative Models</i>](https://arxiv.org/abs/2310.13828) goes into the detail of the Nightshade's effectiviness of poisoning a few generatives model during training. 
+The [Nightshade program tool is freely available](https://nightshade.cs.uchicago.edu/downloads.html) to use by anyone, given with correct supporting platforms (OS and GPU). The paper [<i>Nightshade: Prompt-Specific Poisoning Attacks on Text-to-Image Generative Models</i>](https://arxiv.org/abs/2310.13828) goes into the detail of the Nightshade's effectiviness of disrupting a few generative ai models during training. 
 <br><br>
-Online dicussions on how effective Nightshade poisoning is in the wild are mixed results, with some claiming it works flawlessly and others say it has no impact. With this in mind, I decided to test how effective Nightshade is with a toy u-net diffusion model. 
+Online discussion on how effective Nightshade poisoning is in the wild are mixed results, with some claiming it works flawlessly and others say it has no impact. With this in mind, I decided to test how effective Nightshade is with a toy u-net diffusion model. 
 
-## Youtube Video
+## Table of Contents
+ - [About](#about)
+ - [Table Of Contents](#table-of-contents)
+ - [YouTube Video](#youtube-video)
+ - [Model Setup](#model-setup)
+ - [Datasets Used and Results](#datasets-used-and-results)
+ - [Results Explanation](#results-explanation)
+ - [The Train and Validation Loss for CIFAR10](#the-train-and-validation-loss-for-cifar10)
+ - [The Train and Validation Loss for CIFAR100](#the-train-and-validation-loss-for-cifar100)
+ - [CIFAR10 Dog Inferenced Normal and Posion Images Comparison](#cifar10-dog-inferenced-normal-and-poison-images-comparison)
+ - [CIFAR100 Chair Inferenced Normal and Posion Images Comparison](#cifar100-chair-inferenced-normal-and-poison-images-comparison)
+ - [Possible Issues](#possible-issues)
+ - [How To Run](#how-to-run)
+ - [Resources](#resources)
+ - [References](#references)
+ - [Copyright Information](#copyright-information)
+
+
+## YouTube Video
 Here is a video showcasing the visualizations of the examples below:
 <br>
 [Cold Diffusion Variant Models](https://youtu.be/JdRaWuKZdo8)
@@ -41,10 +59,10 @@ Nightshade poisoning did not disrupt either CIFAR10 or CIFAR100 model training. 
 ## The Train and Validation Loss for CIFAR100
 <img src="plots_train_val_epochs/CIFAR100_results.png" alt="cifar100-train-val" width="720" height="480">
 
-## CIFAR10 Dog Inferenced Normal and Posion Images Comparison
+## CIFAR10 Dog Inferenced Normal and Poison Images Comparison
 ![cifar10-dog-normal-poison](samples_generated_compared/dog_comparison.png)
 
-## CIFAR100 Dog Inferenced Normal and Posion Images Comparison
+## CIFAR100 Chair Inferenced Normal and Poison Images Comparison
 ![cifar100-chair-normal-poison](samples_generated_compared/chair_comparison.png)
 
 ## Possible Issues
@@ -65,10 +83,10 @@ At this small resolution, Nighshade poison barely made any visible change of the
 <br>
 I decided to try Nightshade poison on a bigger and higher quality image to see the impact it has on both image quality and amount of poison added. The image below is AI generated using Google Gemini.
 <img src="poison_difference_compare/gemini~cow~h~f_1_compare.png" alt="gemini~cow~h~f_1_compare">
-This above image used the High intensity and Faster render quality settings in the Nightshade program.
+The above image used the High intensity and Faster render quality settings in the Nightshade program.
 <br>
 <img src="poison_difference_compare/gemini~cow~h~s_1_compare.png" alt="gemini~cow~h~s_1_compare">
-This above image used the High intensity and Slowest render quality settings in the Nightshade program.
+The above image used the High intensity and Slowest render quality settings in the Nightshade program.
 <br>
 <br>
 These ai generated images has been resized down (to fit into github maximum upload limit) and may not show the extent of visible Nightshade poison that was applied. I recommend you to download the images to see the altered changes as they are quite visible. These larger higher quality ai generated images shows the difference between the original and poisoned versions. The heatmap gives insight of what the Nightshade program is targetting to poison. It seems to be targetting the outlines of the image as you can still see the cow, the cow's shadow, the forest, and even where the sun's position is.  
@@ -78,6 +96,8 @@ These ai generated images has been resized down (to fit into github maximum uplo
 Distorting feature representation means distorting the outlines of whatever is pictured. Zooming in close to the poisoned ai generative cow, you can see the outlines of blobs of a mix of red, green, and blue streaks. In the 32x32 images, they are so small that distorting the feature representation is quite limited. But is this enough impact to disrupt a model's learning capbilities? Is there a minimum required image size for Nightshade to be effective?
 
 Another possible issue is the model architecture itself - a U-Net Diffusion model. Without going into too much detail, the encoder and skip connections helps generate an image during the decoder part. The overall Nightshade poison effectiveness might have been limited due to this design of the model. In addition, a diffusion model's purpose is to go from pure noise to a clean image. The Nightshade poison may been treated as another random transformation during training to help generalize and limit overfitting of the model. With the noise added/removed destorying the Nightshade poison according to the linear beta scheduler. Using a different beta scheduler like cosine may have a noticeable impact on the effectiveness of Nightshade poison as the level of noise added/removed is different. Both normal and posioned models learnt similar noise prediction, meaning they are following close to the optimal reverse noise path from pure noise. Does the model architecture play a key role in whether Nightshade poisoning is effective or not? 
+
+The wrong strength of poison could have been used to make the poisoned images in the dataset. I mentioned before of there being 12 poison combinations in the Nightshade program; in the Nightshade paper there is no mention of the poison strength used. Stronger strength of poisoning can have a more visible negative effect on the image, lowering the quality of the piece. Opting for the weakest poison strength means a less visible change to the image but the relative effectiveness of the Nightshade poison may diminish dramatically. What is the minimum amount of poison strength needed for Nightshade posioning to be effective in disrupting a model's training? 
 
 ## How To Run
 - To get the required libraries/dependencies. I recommend making a virtual environment first and then
@@ -138,6 +158,29 @@ On the bottom of the script are two function calls, one for CIFAR10 and the othe
 - Put the model's name without the ".pt" tag for the normal and poisoned model.
 <br>
 <br>
+
+## Resources
+These are some of the resources I used in understanding DDPM diffusion
+<br>
+[Generative AI Research Spotlight: Demystifying Diffusion-Based Models](https://developer.nvidia.com/blog/generative-ai-research-spotlight-demystifying-diffusion-based-models/)
+<br>
+[Linear vs Cosine Schedule](https://hackmd.io/@BaconErie/lin-vs-cos-schedule)
+<br>
+[Cosine-Beta Schedule for Denoising Diffusion Models](https://www.zainnasir.com/blog/cosine-beta-schedule-for-denoising-diffusion-models/)
+<br>
+[Denoising Diffusion Probabilistic Models Code | DDPM Pytorch Implementation](https://www.youtube.com/watch?v=vu6eKteJWew)
+<br>
+[Diffusion models from scratch in PyTorch](https://www.youtube.com/watch?v=a4Yfz2FxXiY)
+<br>
+[Diffusion Models | PyTorch Implementation](https://www.youtube.com/watch?v=TBCRlnwJtZU)
+<br>
+[CIFAR-10 Diffusion (version 4)](https://colab.research.google.com/drive/1rKa8P8Sg1C8q2fzyiM4WMWpZ6sq86423)
+<br>
+[Denoising Diffusion Probabilistic Models](https://arxiv.org/abs/2006.11239)
+<br>
+[The Disappearance of Timestep Embedding in Modern Time-Dependent Neural Networks](https://arxiv.org/abs/2405.14126)
+<br>
+
 
 ## References
 - Computer Science UChicago. (n.d.). What Is Nightshade?. Nightshade. https://nightshade.cs.uchicago.edu/whatis.html
