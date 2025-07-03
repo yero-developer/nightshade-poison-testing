@@ -32,9 +32,9 @@ Online discussion on how effective Nightshade poisoning is in the wild are mixed
 
 
 ## YouTube Video
-Here is a video showcasing the visualizations of the examples below:
+Here is a short video showcasing the results but for more information is in this GitHub Page:
 <br>
-[Cold Diffusion Variant Models](https://youtu.be/JdRaWuKZdo8)
+[Does AI Nightshade Poison Work? Part 1](https://youtu.be/s8A1Mo9bguM?si=Kq7ikgmRALa7CLtQ)
 
 ## Model Setup
 - U-Net Diffusion Model
